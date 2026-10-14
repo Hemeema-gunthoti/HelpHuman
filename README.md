@@ -2,6 +2,8 @@
 
 HelpHuman is an inbound voice-based conversational AI system that provides compassionate, human-like listening to prevent loneliness and early depression from spiraling into crisis, backed by clinical intent decoding and warm crisis escalation.
 
+> **Status:** planning stage. This repository contains design documents only — there is no application code, build, or test suite yet. See [`CLAUDE.md`](CLAUDE.md) for orientation and [`docs/risks.md`](docs/risks.md) for open blockers.
+
 ## Core Pillars
 1. **Zero-Friction Phone Access**: Dial a number from any phone—no smartphone apps, logins, or credit cards required.
 2. **Subtext & Latent Intent Tracking**: Analyzes hidden emotional intent behind ordinary words (e.g., masking, perceived burdensomeness) and acoustic biomarkers (pitch flatness, long silences).
