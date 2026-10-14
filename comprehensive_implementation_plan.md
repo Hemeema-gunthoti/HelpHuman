@@ -240,3 +240,33 @@ Before deploying, the system must pass an automated evaluation suite of 1,000 sy
 1. **Adversarial Jailbreak Test**: Attempting to force the bot to give lethal self-harm instructions (must achieve 100% rejection).
 2. **Veiled Masking Test**: Coded phrases (e.g., *"Going to sleep forever"*, *"Giving away my watch"*) must trigger C-SSRS Level $\ge 3$ evaluation in 100% of cases.
 3. **Latency Stress Test**: Concurrent load of 500 simultaneous WebSockets ensuring p99 audio latency stays below 800ms.
+
+---
+
+## Appendix: Corrections — 2026-10-14
+
+The following corrections were recorded during repository onboarding. The sections above are preserved as originally written; read these corrections alongside them. Full detail and sources are in [`docs/risks.md`](docs/risks.md).
+
+### §3B and §3C — Model selections are a generation out of date
+
+The models named above (Claude 3.5 Sonnet, Gemini 2.0 Flash) predate the current generation. For the conversational core, use `claude-sonnet-5-5` or `claude-opus-5-5`. For the parallel safety classifier, `claude-haiku-5-5` is the baseline to beat before investing in a fine-tuned DeBERTa-v3-large — a current small model is cheap and fast enough that fine-tuning should follow measurement rather than precede it, which also removes an early dependency on datasets whose access is itself unresolved (below).
+
+Two current API behaviours matter for a real-time voice pipeline and are not covered above. A refusal returns as `stop_reason: "refusal"` on an HTTP 200 response rather than raising an exception, so code that reads `content` without checking `stop_reason` produces dead air on a live call. Forced `tool_choice` of `any` or `tool` returns a 400 on `claude-opus-5-5` and `claude-sonnet-5-5`; use structured outputs or `auto` with `strict: true` to get parseable classifier output.
+
+### §4 — DAIC-WOZ is restricted, and one dataset's terms are unknown
+
+DAIC-WOZ is distributed only to academics and other non-profit researchers, requires a request from an academic email address, and requires a signed End-User License Agreement (<https://dcapswoz.ict.usc.edu/>, checked 2026-10-14). The project is framed as research, which makes it licensable in principle, but the request must originate from the sponsoring institution's address.
+
+The access terms for the UMD Reddit Suicidology Corpus could not be verified. Assume restrictive terms until its data use agreement is located.
+
+### §5A — Twilio HIPAA coverage of Media Streams is not settled
+
+Twilio's own HIPAA Eligible Services document lists Media Streams under Programmable Voice with an asterisk, and that document was last updated 2024-09-10. Third-party readings of the asterisk conflict, and a BAA appears to require a Security or Enterprise edition account. Since Media Streams is the mechanism by which audio leaves Twilio, this question gates the telephony layer. Obtain written confirmation from Twilio covering Media Streams specifically.
+
+### §5D — Two assumptions in the escalation design remain unverified
+
+Whether 988 Lifeline centers accept programmatic conference-bridged transfers with whispered context from a third-party AI system has not been confirmed. This is the terminal action of the entire safety architecture. Separately, C-SSRS is a Columbia Lighthouse Project instrument whose automated use likely requires licensing. Both are gates on implementation, not details.
+
+### Gap — §7B's evaluation suite does not cover classifier unavailability
+
+The red-teaming matrix tests adversarial jailbreaks, veiled masking and latency under load, but not what the system does when the safety classifier itself is unavailable. See the degraded-mode proposal in [`docs/architecture.md`](docs/architecture.md).

@@ -1,0 +1,78 @@
+# --- Secrets and configuration -------------------------------------------
+# Never commit credentials. HelpHuman's intended stack requires keys for
+# Twilio, Deepgram, Cartesia/ElevenLabs and at least one model provider.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# --- Caller media and derived artifacts ----------------------------------
+# Raw call audio and transcripts are the most sensitive data this project
+# will ever handle. They must never reach version control, even in a
+# research setting with consented participants: a git object is effectively
+# permanent and cannot be reliably purged from forks and clones.
+*.wav
+*.mp3
+*.flac
+*.pcm
+*.raw
+*.ogg
+*.opus
+recordings/
+transcripts/
+call_logs/
+audio_dumps/
+
+# Model artifacts and licensed datasets. DAIC-WOZ, IEMOCAP, CREMA-D and the
+# UMD corpus are all distributed under agreements that prohibit
+# redistribution — do not vendor them into the repository.
+data/raw/
+data/interim/
+datasets/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.joblib
+*.pkl
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.python-version
+
+# --- Tooling caches -------------------------------------------------------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.hypothesis/
+
+# --- Editors and OS -------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Local infrastructure -------------------------------------------------
+docker-compose.override.yml
+*.local.yml
+pgdata/
+redis-data/

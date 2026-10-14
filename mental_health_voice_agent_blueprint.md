@@ -285,3 +285,31 @@ Phase 4: Clinical Advisory & Pilot (Weeks 13–16)
   ├── Partnership integration with local or national crisis lifelines
   └── Closed beta with 50-100 supervised test callers
 ```
+
+---
+
+## Appendix: Corrections — 2026-10-14
+
+Recorded during repository onboarding. The sections above are preserved as originally written. Full detail and sources are in [`docs/risks.md`](docs/risks.md).
+
+### §4 Component Breakdown — stale model names
+
+The component table names Claude 3.5 Sonnet, Gemini 2.0 Flash and GPT-4o. All three predate the current generation. For the conversational core, use `claude-sonnet-5-5` or `claude-opus-5-5`; for the out-of-band safety evaluator, `claude-haiku-5-5` is the baseline to beat before fine-tuning an encoder model.
+
+### §5 Crisis Escalation — the warm-transfer mechanism is unverified
+
+Two assumptions underpin this section and neither has been confirmed.
+
+Whether 988 Lifeline centers accept a programmatic conference-bridged transfer from a third-party AI system, and accept whispered context from an automated caller, is unknown. This is the terminal action of the safety architecture; if it is not available, the escalation path has no endpoint and the design needs rework before implementation.
+
+C-SSRS is an instrument of the Columbia Lighthouse Project. Automated scoring, and a model trained to emit C-SSRS levels, likely require licensing. The tier ladder above can be retained as an internal severity scale under a different name if permission is not granted, but the clinical validity claim cannot be.
+
+### §6 Dropped Call Protocol — dispatch needs a human in the loop
+
+The safety and privacy caveat on domestic violence and shared phones is the right instinct and should be kept. Two gaps remain: PSAP dispatch triggered by an AI-generated risk score is a consequential action with real potential for harm if the score is wrong, and the "human safety team" is undefined. Automated dispatch should require explicit human confirmation, and for a research protocol both the dispatch criteria and the on-call arrangement are IRB questions before they are engineering ones.
+
+Also note: absence of a stored callback preference must be treated as no consent, not as permission.
+
+### Gap — no defined behaviour when the safety evaluator is unavailable
+
+The parallel safety path is the sole risk-detection mechanism, but no section specifies what happens on timeout, rate limit, refusal or outage. The natural implementation continues the conversation and silently drops monitoring, which is the worst available outcome. See the degraded-mode proposal in [`docs/architecture.md`](docs/architecture.md).
